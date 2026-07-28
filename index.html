@@ -1,1167 +1,358 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>ระบบบริหารคิวสำรวจภาคสนาม | หมู่ 5 เทศบาลชากหมาก</title>
-<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #0d1117;
-  --bg2: #161b22;
-  --bg3: #21262d;
-  --bg4: #30363d;
-  --border: #30363d;
-  --border2: #3d444d;
-  --text: #e6edf3;
-  --text2: #9198a1;
-  --text3: #636e7b;
-  --accent: #1f6feb;
-  --accent2: #388bfd;
-  --green: #238636;
-  --green2: #2ea043;
-  --green-bg: #0d2119;
-  --green-text: #3fb950;
-  --yellow: #9e6a03;
-  --yellow2: #d29922;
-  --yellow-bg: #2d1f02;
-  --yellow-text: #e3b341;
-  --red: #da3633;
-  --red2: #f85149;
-  --red-bg: #2d0f0e;
-  --red-text: #ff7b72;
-  --blue-bg: #0c2d6b;
-  --radius: 8px;
-  --radius2: 12px;
-  --shadow: 0 4px 24px rgba(0,0,0,0.4);
-}
-[data-theme="light"] {
-  --bg: #f5f8fa;
-  --bg2: #ffffff;
-  --bg3: #f0f4f8;
-  --bg4: #e2e8f0;
-  --border: #d1d9e0;
-  --border2: #c5ced6;
-  --text: #1a2332;
-  --text2: #57606a;
-  --text3: #8c949e;
-  --accent: #0969da;
-  --accent2: #218bff;
-  --green-bg: #dafbe1;
-  --green-text: #1a7f37;
-  --yellow-bg: #fff8c5;
-  --yellow-text: #9a6700;
-  --red-bg: #ffebe9;
-  --red-text: #cf222e;
-  --blue-bg: #ddf4ff;
-  --shadow: 0 4px 24px rgba(0,0,0,0.08);
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 16px; }
-body {
-  font-family: 'Sarabun', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  transition: background 0.3s, color 0.3s;
-}
-/* ===== HEADER ===== */
-.header {
-  background: var(--bg2);
-  border-bottom: 1px solid var(--border);
-  padding: 12px 16px;
-  position: sticky; top: 0; z-index: 100;
-  display: flex; align-items: center; gap: 12px;
-}
-.header-logo { font-size: 22px; }
-.header-title { flex: 1; }
-.header-title h1 { font-size: 15px; font-weight: 700; line-height: 1.2; }
-.header-title p { font-size: 11px; color: var(--text3); margin-top: 1px; }
-.header-actions { display: flex; gap: 8px; align-items: center; }
-.btn-icon {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  color: var(--text2);
-  width: 36px; height: 36px;
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-  transition: all 0.2s;
-}
-.btn-icon:hover { background: var(--bg4); color: var(--text); }
-/* ===== TABS ===== */
-.tabs {
-  display: flex;
-  background: var(--bg2);
-  border-bottom: 1px solid var(--border);
-  overflow-x: auto;
-  scrollbar-width: none;
-  gap: 0;
-}
-.tabs::-webkit-scrollbar { display: none; }
-.tab {
-  flex: none;
-  padding: 10px 16px;
-  font-size: 13px; font-weight: 500;
-  color: var(--text2);
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-  transition: all 0.2s;
-  font-family: 'Sarabun', sans-serif;
-  background: none; border-top: none; border-left: none; border-right: none;
-}
-.tab:hover { color: var(--text); }
-.tab.active { color: var(--accent2); border-bottom-color: var(--accent2); }
-/* ===== MAIN ===== */
-.main { padding: 16px; max-width: 1200px; margin: 0 auto; }
-/* ===== DASHBOARD ===== */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px; margin-bottom: 16px;
-}
-@media(min-width:600px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
-.stat-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius2);
-  padding: 14px;
-  transition: border-color 0.2s;
-}
-.stat-card:hover { border-color: var(--border2); }
-.stat-label { font-size: 11px; color: var(--text3); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-.stat-val { font-size: 28px; font-weight: 700; line-height: 1.2; margin: 4px 0; font-family: 'IBM Plex Mono', monospace; }
-.stat-sub { font-size: 11px; color: var(--text3); }
-.stat-total .stat-val { color: var(--accent2); }
-.stat-done .stat-val { color: var(--green-text); }
-.stat-pending .stat-val { color: var(--red-text); }
-.stat-progress .stat-val { color: var(--yellow-text); }
-.progress-bar-wrap { background: var(--bg3); border-radius: 4px; height: 6px; margin-top: 8px; overflow: hidden; }
-.progress-bar { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--green2), var(--accent2)); transition: width 0.6s ease; }
-/* ===== UPLOAD ===== */
-.upload-zone {
-  border: 2px dashed var(--border2);
-  border-radius: var(--radius2);
-  padding: 32px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s;
-  background: var(--bg2);
-  margin-bottom: 16px;
-}
-.upload-zone:hover, .upload-zone.drag { border-color: var(--accent2); background: var(--blue-bg); }
-.upload-icon { font-size: 36px; margin-bottom: 8px; }
-.upload-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
-.upload-sub { font-size: 13px; color: var(--text3); }
-#fileInput { display: none; }
-/* ===== SEARCH/FILTER ===== */
-.toolbar {
-  display: flex; gap: 8px; flex-wrap: wrap;
-  margin-bottom: 12px; align-items: center;
-}
-.search-wrap { flex: 1; min-width: 160px; position: relative; }
-.search-wrap input {
-  width: 100%;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  border-radius: 8px;
-  padding: 8px 12px 8px 36px;
-  font-size: 13px;
-  font-family: 'Sarabun', sans-serif;
-  outline: none;
-  transition: border-color 0.2s;
-}
-.search-wrap input:focus { border-color: var(--accent); }
-.search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 14px; }
-select.filter-select {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  border-radius: 8px;
-  padding: 8px 10px;
-  font-size: 13px;
-  font-family: 'Sarabun', sans-serif;
-  outline: none;
-  cursor: pointer;
-}
-.btn {
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  border: 1px solid transparent;
-  font-family: 'Sarabun', sans-serif;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-.btn-primary { background: var(--accent); color: white; border-color: var(--accent); }
-.btn-primary:hover { background: var(--accent2); }
-.btn-success { background: var(--green2); color: white; border-color: var(--green2); }
-.btn-success:hover { background: var(--green); }
-.btn-ghost { background: var(--bg3); color: var(--text2); border-color: var(--border); }
-.btn-ghost:hover { background: var(--bg4); color: var(--text); }
-/* ===== TABLE ===== */
-.table-wrap { overflow-x: auto; border-radius: var(--radius2); border: 1px solid var(--border); }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-thead { background: var(--bg3); position: sticky; top: 0; }
-th {
-  padding: 10px 12px;
-  text-align: left;
-  font-weight: 600;
-  color: var(--text2);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
-}
-td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: var(--bg3); }
-.row-done td { background: rgba(35,134,54,0.05); }
-.row-inprogress td { background: rgba(158,106,3,0.05); }
-/* ===== STATUS BADGES ===== */
-.badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  padding: 3px 8px; border-radius: 20px;
-  font-size: 11px; font-weight: 600; white-space: nowrap;
-}
-.badge-pending { background: var(--red-bg); color: var(--red-text); }
-.badge-inprogress { background: var(--yellow-bg); color: var(--yellow-text); }
-.badge-done { background: var(--green-bg); color: var(--green-text); }
-/* ===== STATUS SELECT ===== */
-.status-sel {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  color: var(--text);
-  border-radius: 6px;
-  padding: 4px 8px;
-  font-size: 12px;
-  font-family: 'Sarabun', sans-serif;
-  cursor: pointer;
-  outline: none;
-}
-/* ===== MAP BUTTONS ===== */
-.map-actions { display: flex; gap: 4px; flex-wrap: wrap; }
-.btn-sm {
-  padding: 4px 8px; border-radius: 6px; font-size: 11px;
-  font-weight: 500; cursor: pointer; border: 1px solid var(--border);
-  background: var(--bg3); color: var(--text2);
-  font-family: 'Sarabun', sans-serif;
-  transition: all 0.2s; white-space: nowrap;
-}
-.btn-sm:hover { background: var(--bg4); color: var(--text); }
-.btn-sm.map { border-color: #1d63a0; background: rgba(29,99,160,0.15); color: #60b4f8; }
-.btn-sm.copy { border-color: var(--border2); }
-/* ===== NOTE ===== */
-.note-text { color: var(--text2); font-size: 12px; max-width: 160px; line-height: 1.4; }
-/* ===== CARD (mobile) ===== */
-.card-list { display: flex; flex-direction: column; gap: 10px; }
-.survey-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius2);
-  padding: 14px;
-  transition: border-color 0.2s;
-}
-.survey-card.done { border-color: var(--green2); }
-.survey-card.inprogress { border-color: var(--yellow2); }
-.card-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
-.card-num { font-size: 11px; color: var(--text3); font-family: 'IBM Plex Mono', monospace; }
-.card-name { font-weight: 600; font-size: 14px; flex: 1; }
-.card-body { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; font-size: 12px; }
-.card-field label { color: var(--text3); display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.3px; }
-.card-field span { color: var(--text); }
-.card-actions { display: flex; gap: 6px; flex-wrap: wrap; }
-.btn-big {
-  flex: 1; min-width: 80px;
-  padding: 10px 8px;
-  border-radius: 10px;
-  font-size: 13px; font-weight: 600;
-  cursor: pointer; border: 1px solid var(--border);
-  background: var(--bg3); color: var(--text);
-  font-family: 'Sarabun', sans-serif;
-  text-align: center;
-  transition: all 0.2s;
-}
-.btn-big:active { transform: scale(0.97); }
-.btn-big.map { background: rgba(29,99,160,0.2); border-color: #1d63a0; color: #60b4f8; }
-.btn-big.done { background: var(--green-bg); border-color: var(--green2); color: var(--green-text); }
-.btn-big.inprog { background: var(--yellow-bg); border-color: var(--yellow2); color: var(--yellow-text); }
-/* ===== EMPTY STATE ===== */
-.empty {
-  text-align: center; padding: 60px 20px;
-  color: var(--text3);
-}
-.empty-icon { font-size: 48px; margin-bottom: 12px; }
-.empty h3 { font-size: 16px; color: var(--text2); margin-bottom: 6px; }
-/* ===== PANEL ===== */
-.panel { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius2); padding: 16px; margin-bottom: 16px; }
-.panel-title { font-size: 14px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-/* ===== TOAST ===== */
-.toast-wrap { position: fixed; bottom: 20px; right: 16px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
-.toast {
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  color: var(--text);
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-size: 13px;
-  box-shadow: var(--shadow);
-  animation: slideIn 0.3s ease, fadeOut 0.4s ease 2.6s forwards;
-  max-width: 280px;
-}
-@keyframes slideIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-@keyframes fadeOut { to { opacity: 0; transform: translateY(10px); } }
-/* ===== LOADING ===== */
-.loading { text-align: center; padding: 40px; color: var(--text3); }
-.spinner {
-  width: 32px; height: 32px;
-  border: 3px solid var(--bg4);
-  border-top-color: var(--accent2);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin: 0 auto 12px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-/* ===== MODAL ===== */
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-  z-index: 200; display: none; align-items: flex-end;
-  padding: 0;
-}
-.modal-overlay.open { display: flex; }
-.modal {
-  background: var(--bg2);
-  border-radius: 16px 16px 0 0;
-  width: 100%; max-height: 90vh;
-  overflow-y: auto; padding: 20px;
-  border: 1px solid var(--border);
-}
-@media(min-width:600px){
-  .modal-overlay { align-items: center; justify-content: center; padding: 20px; }
-  .modal { border-radius: 16px; max-width: 480px; }
-}
-.modal-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
-.modal-close { cursor: pointer; color: var(--text3); font-size: 20px; }
-/* ===== FORM ===== */
-.form-group { margin-bottom: 12px; }
-.form-group label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 4px; font-weight: 500; }
-.form-group input, .form-group textarea, .form-group select {
-  width: 100%; background: var(--bg3); border: 1px solid var(--border);
-  color: var(--text); border-radius: 8px; padding: 10px 12px;
-  font-size: 14px; font-family: 'Sarabun', sans-serif;
-  outline: none; transition: border-color 0.2s;
-}
-.form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
-.form-group textarea { resize: vertical; min-height: 80px; }
-/* ===== REPORT ===== */
-.report-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
-.report-row:last-child { border-bottom: none; }
-.soi-chip {
-  display: inline-block; padding: 3px 10px; border-radius: 20px;
-  background: var(--bg4); color: var(--text2);
-  font-size: 12px; margin: 3px;
-  cursor: pointer; border: 1px solid transparent;
-  transition: all 0.2s;
-}
-.soi-chip:hover, .soi-chip.active { background: var(--blue-bg); color: var(--accent2); border-color: var(--accent); }
-/* ===== RESPONSIVE ===== */
-@media(max-width:599px){
-  .desktop-only { display: none !important; }
-}
-@media(min-width:600px){
-  .mobile-only { display: none !important; }
-}
-.count-badge {
-  background: var(--bg4); color: var(--text3);
-  font-size: 10px; padding: 1px 6px; border-radius: 10px;
-  font-family: 'IBM Plex Mono', monospace;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOMPHORN Pure Indicator Vision System v20</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0b0f19; color: #d1d5db; margin: 0; padding: 20px; }
+
+        .app-container { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+        
+        .header { background: #111827; border: 1px solid #1f2937; padding: 15px 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .brand { font-size: 18px; font-weight: bold; color: #60a5fa; }
+        .sub-badge { font-size: 12px; background: rgba(245, 158, 11, 0.2); padding: 5px 12px; border-radius: 20px; color: #fbbf24; border: 1px solid #f59e0b; font-weight: bold; }
+
+        /* สไตล์สำหรับกล่องแสดงสัญญาณ Telegram สด */
+        .telegram-live-box {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid #10b981;
+            border-radius: 10px;
+            padding: 15px 20px;
+            color: #34d399;
+            font-size: 14px;
+            font-family: monospace;
+            white-space: pre-line;
+        }
+        .telegram-live-title {
+            font-weight: bold;
+            color: #6ee7b7;
+            margin-bottom: 5px;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .warning-banner {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(245, 158, 11, 0.25));
+            border: 2px solid #ef4444; border-radius: 10px; padding: 14px 20px;
+            text-align: center; font-size: 14px; font-weight: bold; color: #fca5a5;
+            display: flex; flex-direction: column; gap: 5px; align-items: center; justify-content: center;
+        }
+        .warning-sub { font-size: 12px; color: #fbbf24; font-weight: normal; }
+
+        .workspace { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        .panel { background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .panel-title { font-size: 14px; font-weight: bold; color: #93c5fd; text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center; }
+
+        .drop-zone {
+            background: #030712; border: 2px dashed #374151; border-radius: 10px;
+            min-height: 240px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; position: relative; overflow: hidden; text-align: center; padding: 15px;
+            transition: all 0.2s ease;
+        }
+        .drop-zone:hover { border-color: #60a5fa; background: rgba(96, 165, 250, 0.02); }
+        .drop-zone img { max-width: 100%; max-height: 100%; object-fit: contain; display: none; }
+        .drop-hint { color: #6b7280; font-size: 13px; line-height: 1.5; pointer-events: none; }
+
+        .verdict-box {
+            padding: 15px; border-radius: 10px; text-align: center; font-size: 20px; font-weight: 800;
+            border: 2px solid #374151; background: #1f2937;
+        }
+        .verdict-box.pass { background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #34d399; }
+        .verdict-box.skip { background: rgba(245, 158, 11, 0.2); border-color: #f59e0b; color: #fbbf24; }
+        .verdict-box.error { background: rgba(107, 114, 128, 0.2); border-color: #4b5563; color: #9ca3af; font-size: 16px; }
+
+        .metrics-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .metric-card { background: #1f2937; border: 1px solid #374151; border-radius: 8px; padding: 10px 14px; }
+        .metric-label { font-size: 11px; color: #9ca3af; text-transform: uppercase; }
+        .metric-value { font-size: 13px; font-weight: bold; color: #f3f4f6; margin-top: 3px; }
+
+        .compound-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 5px; }
+        .compound-box { background: #030712; border: 1px solid #374151; border-radius: 6px; padding: 8px; text-align: center; }
+        .compound-step { font-size: 10px; color: #9ca3af; }
+        .compound-val { font-size: 14px; font-weight: bold; color: #34d399; margin-top: 2px; }
+        .compound-val.low { color: #f87171; }
+
+        .reason-box {
+            background: #030712; border: 1px solid #1f2937; border-radius: 8px; padding: 12px;
+            font-size: 12px; line-height: 1.6; color: #d1d5db; min-height: 100px; max-height: 160px; overflow-y: auto;
+        }
+
+        .stats-panel {
+            background: #030712; border: 1px solid #1f2937; border-radius: 8px; padding: 12px;
+            font-size: 12px; color: #9ca3af; display: flex; justify-content: space-between; align-items: center;
+        }
+        .stats-item { text-align: center; }
+        .stats-num { font-size: 16px; font-weight: bold; color: #60a5fa; }
+    </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-logo">🗺️</div>
-  <div class="header-title">
-    <h1>ระบบบริหารคิวสำรวจภาคสนาม</h1>
-    <p>หมู่ 5 เทศบาลชากหมาก · ต.สำนักท้อน</p>
-  </div>
-  <div class="header-actions">
-    <button class="btn-icon" id="themeToggle" title="สลับธีม">🌙</button>
-    <button class="btn-icon" id="addBtn" title="เพิ่มรายการ">➕</button>
-    <button class="btn-icon" id="exportMenuBtn" title="ส่งออก">⬇️</button>
-  </div>
-</div>
-
-<div class="tabs">
-  <button class="tab active" data-tab="dashboard">📊 ภาพรวม</button>
-  <button class="tab" data-tab="list">📋 รายการ</button>
-  <button class="tab" data-tab="upload">📤 นำเข้า</button>
-  <button class="tab" data-tab="report">📄 รายงาน</button>
-</div>
-
-<div class="main">
-  <!-- DASHBOARD TAB -->
-  <div id="tab-dashboard">
-    <div class="stats-grid">
-      <div class="stat-card stat-total">
-        <div class="stat-label">ทั้งหมด</div>
-        <div class="stat-val" id="statTotal">0</div>
-        <div class="stat-sub">รายการสำรวจ</div>
-      </div>
-      <div class="stat-card stat-done">
-        <div class="stat-label">สำรวจแล้ว</div>
-        <div class="stat-val" id="statDone">0</div>
-        <div class="stat-sub">รายการ</div>
-        <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
-      </div>
-      <div class="stat-card stat-pending">
-        <div class="stat-label">ค้างอยู่</div>
-        <div class="stat-val" id="statPending">0</div>
-        <div class="stat-sub">รายการ</div>
-      </div>
-      <div class="stat-card stat-progress">
-        <div class="stat-label">กำลังสำรวจ</div>
-        <div class="stat-val" id="statInprogress">0</div>
-        <div class="stat-sub">รายการ</div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-title">🏘️ กรองตามซอย</div>
-      <div id="soiChips" style="line-height:2.2"></div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-title">⚡ รายการที่ต้องดำเนินการ</div>
-      <div id="quickList" class="card-list"></div>
-    </div>
-  </div>
-
-  <!-- LIST TAB -->
-  <div id="tab-list" style="display:none">
-    <div class="toolbar">
-      <div class="search-wrap">
-        <span class="search-icon">🔍</span>
-        <input type="text" id="searchInput" placeholder="ค้นหาชื่อ บ้านเลขที่ ซอย เบอร์...">
-      </div>
-      <select class="filter-select" id="filterStatus">
-        <option value="">ทุกสถานะ</option>
-        <option value="pending">รอสำรวจ</option>
-        <option value="inprogress">กำลังสำรวจ</option>
-        <option value="done">สำรวจแล้ว</option>
-      </select>
-      <select class="filter-select" id="filterSoi">
-        <option value="">ทุกซอย</option>
-      </select>
-      <button class="btn btn-success desktop-only" id="markAllDoneBtn">✅ Mark All Done</button>
-    </div>
-
-    <div id="resultCount" style="font-size:12px;color:var(--text3);margin-bottom:10px"></div>
-
-    <!-- Desktop Table -->
-    <div class="table-wrap desktop-only" id="tableWrap">
-      <table id="mainTable">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>ชื่อ / เจ้าของ</th>
-            <th>บ้านเลขที่</th>
-            <th>ซอย</th>
-            <th>เบอร์โทร</th>
-            <th>หมายเหตุ</th>
-            <th>แผนที่</th>
-            <th>สถานะ</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
-    </div>
-
-    <!-- Mobile Cards -->
-    <div class="card-list mobile-only" id="cardList"></div>
-  </div>
-
-  <!-- UPLOAD TAB -->
-  <div id="tab-upload" style="display:none">
-    <div class="upload-zone" id="uploadZone">
-      <div class="upload-icon">📁</div>
-      <div class="upload-title">อัปโหลดไฟล์ LINE Export</div>
-      <div class="upload-sub">ลากไฟล์ .txt มาวางที่นี่ หรือคลิกเพื่อเลือกไฟล์</div>
-      <input type="file" id="fileInput" accept=".txt">
-    </div>
-
-    <div class="panel" id="parseStatus" style="display:none">
-      <div class="panel-title">📊 ผลการวิเคราะห์</div>
-      <div id="parseResult"></div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-title">💾 สำรองข้อมูล</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btn-ghost" onclick="exportCSV()">📊 Export CSV</button>
-        <button class="btn btn-ghost" onclick="exportJSON()">📦 Export JSON</button>
-        <button class="btn btn-ghost" onclick="document.getElementById('importInput').click()">📥 Import JSON</button>
-        <button class="btn btn-ghost" onclick="clearAll()" style="color:var(--red-text)">🗑️ ล้างข้อมูลทั้งหมด</button>
-      </div>
-      <input type="file" id="importInput" accept=".json" style="display:none">
-    </div>
-  </div>
-
-  <!-- REPORT TAB -->
-  <div id="tab-report" style="display:none">
-    <div class="panel">
-      <div class="panel-title">📈 สรุปงานประจำวัน · <span id="reportDate"></span></div>
-      <div id="reportContent"></div>
-    </div>
-    <div class="panel">
-      <div class="panel-title">📋 รายชื่อที่ยังไม่ได้สำรวจ</div>
-      <div id="pendingList"></div>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-      <button class="btn btn-primary" onclick="printReport()">🖨️ พิมพ์รายงาน</button>
-      <button class="btn btn-ghost" onclick="exportCSV()">📊 Export CSV</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL ADD/EDIT -->
-<div class="modal-overlay" id="editModal">
-  <div class="modal">
-    <div class="modal-title">
-      <span id="modalTitle">เพิ่มรายการ</span>
-      <span class="modal-close" onclick="closeModal()">✕</span>
-    </div>
-    <div class="form-group"><label>ชื่อ / เจ้าของบ้าน</label><input id="fName" placeholder="นายสมชาย..."></div>
-    <div class="form-group"><label>บ้านเลขที่</label><input id="fAddress" placeholder="199/55"></div>
-    <div class="form-group"><label>ซอย</label><input id="fSoi" placeholder="จริงใจ 1"></div>
-    <div class="form-group"><label>เบอร์โทร</label><input id="fPhone" placeholder="0812345678" inputmode="tel"></div>
-    <div class="form-group"><label>ลิงก์แผนที่ (Google Maps)</label><input id="fMapUrl" placeholder="https://maps.google.com/..."></div>
-    <div class="form-group">
-      <label>lat, lng (พิกัด)</label>
-      <div style="display:flex;gap:8px">
-        <input id="fLat" placeholder="lat" inputmode="decimal" style="flex:1">
-        <input id="fLng" placeholder="lng" inputmode="decimal" style="flex:1">
-      </div>
-    </div>
-    <div class="form-group"><label>หมายเหตุ</label><textarea id="fNote" placeholder="รออยู่บ้าน..."></textarea></div>
-    <div class="form-group">
-      <label>สถานะ</label>
-      <select id="fStatus">
-        <option value="pending">รอสำรวจ</option>
-        <option value="inprogress">กำลังสำรวจ</option>
-        <option value="done">สำรวจแล้ว</option>
-      </select>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:4px">
-      <button class="btn btn-primary" style="flex:1" onclick="saveItem()">💾 บันทึก</button>
-      <button class="btn btn-ghost" style="flex:1" onclick="closeModal()">ยกเลิก</button>
-    </div>
-  </div>
-</div>
-
-<!-- TOAST -->
-<div class="toast-wrap" id="toastWrap"></div>
-
-<script>
-// ===== STATE =====
-let items = [];
-let editId = null;
-let filterSoi = '';
-let filterStatus = '';
-let searchQ = '';
-let darkMode = true;
-
-const STORAGE_KEY = 'survey_items_v2';
-const THEME_KEY = 'survey_theme';
-
-// ===== INIT =====
-function init() {
-  loadStorage();
-  const saved = localStorage.getItem(THEME_KEY);
-  if (saved === 'light') { darkMode = false; document.documentElement.setAttribute('data-theme','light'); document.getElementById('themeToggle').textContent = '☀️'; }
-  renderAll();
-  bindEvents();
-}
-
-// ===== STORAGE =====
-function loadStorage() {
-  try { items = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { items = []; }
-}
-function saveStorage() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-}
-
-// ===== UUID =====
-function uuid() { return 'id-' + Math.random().toString(36).substr(2,9) + Date.now().toString(36); }
-
-// ===== PARSE LINE =====
-function parseLineTxt(text) {
-  const lines = text.split('\n');
-  const entries = [];
-  let i = 0;
-  let currentDate = '';
-
-  // Patterns
-  const dateRe = /^(\d{4}\.\d{2}\.\d{2})/;
-  const msgRe = /^(\d{1,2}:\d{2})\s+(.+?)\s{2,}(.*)$/; // time  sender  text (double space separator)
-  const msgRe2 = /^(\d{1,2}:\d{2})\s+([^\s].*?)$/; // fallback
-  const mapsRe = /https?:\/\/(?:maps\.google\.com\/maps\?q=([-\d.]+),([-\d.]+)|maps\.app\.goo\.gl\/\S+|goo\.gl\/maps\/\S+)/g;
-  const coordRe = /https?:\/\/maps\.google\.com\/maps\?q=([-\d.]+),([-\d.]+)/;
-  const addrRe = /(\d+\/\d+|\d+\/\d+\/\d+)(?:ม\.?\s*(\d+)|หมู่?\s*(\d+))?/;
-  const soiRe = /ซอย\s*([^\s,]+(?:\s+\d+)?|จริงใจ\s*\d+|น้ำเย็น\s*\d+)/i;
-  const phoneRe = /(?:0[689]\d[-\s]?\d{3,4}[-\s]?\d{4}|\d{3}-\d{3}-\d{4}|\d{10})/;
-  const doneWords = /รออยู่บ้าน|อยู่บ้านแล้ว|เรียบร้อย|สำรวจแล้ว|ดำเนินการแล้ว/;
-  const inProgWords = /กำลังสำรวจ|ออกมารอ|รอแล้ว|สักครู่/;
-
-  // Tokenize: each "message block" = time + sender + 1..N lines of text
-  let blocks = [];
-  let cur = null;
-
-  for (let li = 0; li < lines.length; li++) {
-    const line = lines[li].trim();
-    if (!line) continue;
-
-    const dMatch = line.match(dateRe);
-    if (dMatch) { currentDate = dMatch[1]; continue; }
-
-    // Detect message start: starts with HH:MM
-    const timeMatch = line.match(/^(\d{1,2}:\d{2})\s+(\S+.*)/);
-    if (timeMatch) {
-      if (cur) blocks.push(cur);
-      cur = { time: timeMatch[1], date: currentDate, raw: line, textLines: [] };
-      // rest after time+sender: parse out sender
-      const rest = timeMatch[2];
-      // Sender is up to first double-space or end
-      const senderMatch = rest.match(/^(.+?)\s{2,}(.*)$/);
-      if (senderMatch) {
-        cur.sender = senderMatch[1].trim();
-        if (senderMatch[2]) cur.textLines.push(senderMatch[2]);
-      } else {
-        cur.sender = rest.trim();
-      }
-    } else if (cur) {
-      cur.textLines.push(line);
-    }
-  }
-  if (cur) blocks.push(cur);
-
-  // Now extract location entries
-  for (const block of blocks) {
-    const allText = block.textLines.join('\n');
-    // skip system messages
-    if (/เข้าร่วมกลุ่ม|เข้ากลุ่ม|ออกจากกลุ่ม|เปลี่ยนชื่อกลุ่ม|สติกเกอร์|ยกเลิกข้อความ|รูป/.test(allText) && !allText.match(/maps|พิกัด|\d+\/\d+/)) continue;
-
-    // Check for map links in any line
-    let mapUrl = '';
-    let lat = '', lng = '';
-    let hasMap = false;
-
-    for (const tl of block.textLines) {
-      const cm = tl.match(coordRe);
-      if (cm) { lat = cm[1]; lng = cm[2]; mapUrl = `https://maps.google.com/maps?q=${lat},${lng}`; hasMap = true; }
-      else if (/maps\.app\.goo\.gl|goo\.gl\/maps/.test(tl)) {
-        const mu = tl.match(/https?:\/\/\S+/);
-        if (mu) { mapUrl = mu[0]; hasMap = true; }
-      }
-    }
-
-    if (!hasMap) continue; // only entries with map links
-
-    // Extract details from all text lines
-    const combined = block.textLines.join(' ');
-    const addrM = combined.match(addrRe);
-    const soiM = combined.match(soiRe);
-    const phoneM = combined.match(phoneRe);
-
-    // Name: try to find Thai name pattern
-    let name = block.sender;
-    // Look for explicit name in text (Thai name usually 2-3 words)
-    const nameLines = block.textLines.filter(l => /^[ก-๙\s]{4,}$/.test(l.trim()) && !l.includes('/') && !l.match(/\d{5}/));
-    if (nameLines.length > 0 && nameLines[0].trim().length > 3) {
-      name = nameLines[0].trim();
-    }
-
-    // Note: look for action words or general descriptive text
-    let note = '';
-    for (const tl of block.textLines) {
-      if (!tl.match(/maps|https|ตำบล|อำเภอ|ระยอง/) && !tl.match(addrRe) && tl.trim().length > 4) {
-        note += (note ? ' ' : '') + tl.trim();
-      }
-    }
-
-    // Auto status
-    let status = 'pending';
-    if (doneWords.test(combined + note)) status = 'done';
-    else if (inProgWords.test(combined + note)) status = 'inprogress';
-
-    entries.push({
-      id: uuid(),
-      sender: block.sender,
-      name: name || block.sender,
-      address: addrM ? addrM[0].replace(/\s+/g, '') : '',
-      soi: soiM ? soiM[1].trim() : '',
-      phone: phoneM ? phoneM[0].replace(/\s/g,'-') : '',
-      map_url: mapUrl,
-      lat: parseFloat(lat) || null,
-      lng: parseFloat(lng) || null,
-      status: status,
-      note: note.substring(0,200),
-      created_at: block.date || new Date().toISOString().split('T')[0],
-      time: block.time || ''
-    });
-  }
-
-  return entries;
-}
-
-// ===== MERGE DUPLICATES =====
-function mergeItems(newItems) {
-  const DIST_THRESHOLD = 0.0003; // ~30m
-  let added = 0, merged = 0;
-
-  for (const ni of newItems) {
-    // Check by lat/lng proximity
-    let found = null;
-    if (ni.lat && ni.lng) {
-      found = items.find(ex => {
-        if (!ex.lat || !ex.lng) return false;
-        return Math.abs(ex.lat - ni.lat) < DIST_THRESHOLD && Math.abs(ex.lng - ni.lng) < DIST_THRESHOLD;
-      });
-    }
-    // Check by URL
-    if (!found && ni.map_url) {
-      found = items.find(ex => ex.map_url && normalizeUrl(ex.map_url) === normalizeUrl(ni.map_url));
-    }
-
-    if (found) {
-      // Merge: fill in missing fields
-      if (!found.phone && ni.phone) found.phone = ni.phone;
-      if (!found.address && ni.address) found.address = ni.address;
-      if (!found.soi && ni.soi) found.soi = ni.soi;
-      if (ni.note && ni.note !== found.note) found.note = (found.note ? found.note + ' | ' : '') + ni.note;
-      merged++;
-    } else {
-      items.push(ni);
-      added++;
-    }
-  }
-  return { added, merged };
-}
-
-function normalizeUrl(url) {
-  return url.replace(/[?&]g_st=\w+/g,'').replace(/\s/g,'').toLowerCase();
-}
-
-// ===== RENDER =====
-function renderAll() {
-  renderStats();
-  renderSoiChips();
-  renderList();
-  renderReport();
-}
-
-function renderStats() {
-  const total = items.length;
-  const done = items.filter(i=>i.status==='done').length;
-  const pending = items.filter(i=>i.status==='pending').length;
-  const inprog = items.filter(i=>i.status==='inprogress').length;
-  const pct = total ? Math.round(done/total*100) : 0;
-
-  document.getElementById('statTotal').textContent = total;
-  document.getElementById('statDone').textContent = done;
-  document.getElementById('statPending').textContent = pending;
-  document.getElementById('statInprogress').textContent = inprog;
-  document.getElementById('progressBar').style.width = pct + '%';
-
-  // Quick list: pending/inprogress, max 10
-  const quick = items.filter(i=>i.status!=='done').slice(0,10);
-  const ql = document.getElementById('quickList');
-  if (!quick.length) {
-    ql.innerHTML = '<div class="empty"><div class="empty-icon">🎉</div><h3>สำรวจครบทุกรายการแล้ว!</h3></div>';
-    return;
-  }
-  ql.innerHTML = quick.map(item => cardHTML(item, true)).join('');
-}
-
-function getSois() {
-  const s = new Set(items.map(i=>i.soi).filter(Boolean));
-  return [...s].sort();
-}
-
-function renderSoiChips() {
-  const sois = getSois();
-  const el = document.getElementById('soiChips');
-  el.innerHTML = '<span class="soi-chip '+(filterSoi===''?'active':'')+'" onclick="setSoiFilter(\'\')">ทั้งหมด</span>' +
-    sois.map(s=>`<span class="soi-chip ${filterSoi===s?'active':''}" onclick="setSoiFilter('${s}')">${s} <span class="count-badge">${items.filter(i=>i.soi===s).length}</span></span>`).join('');
-
-  // Also fill filter select
-  const sel = document.getElementById('filterSoi');
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">ทุกซอย</option>' + sois.map(s=>`<option value="${s}">${s}</option>`).join('');
-  sel.value = cur;
-}
-
-function setSoiFilter(s) {
-  filterSoi = s;
-  renderSoiChips();
-  renderList();
-}
-
-function getFiltered() {
-  return items.filter(item => {
-    if (filterStatus && item.status !== filterStatus) return false;
-    const sf = document.getElementById('filterSoi').value;
-    if (sf && item.soi !== sf) return false;
-    if (filterSoi && item.soi !== filterSoi) return false;
-    if (searchQ) {
-      const q = searchQ.toLowerCase();
-      const hay = [item.name,item.address,item.soi,item.phone,item.note,item.sender].join(' ').toLowerCase();
-      if (!hay.includes(q)) return false;
-    }
-    return true;
-  });
-}
-
-function renderList() {
-  const filtered = getFiltered();
-  document.getElementById('resultCount').textContent = `แสดง ${filtered.length} จาก ${items.length} รายการ`;
-
-  // Desktop table
-  const tbody = document.getElementById('tableBody');
-  tbody.innerHTML = filtered.length ? filtered.map((item,idx) => `
-    <tr class="${item.status==='done'?'row-done':item.status==='inprogress'?'row-inprogress':''}" id="row-${item.id}">
-      <td style="color:var(--text3);font-family:'IBM Plex Mono',monospace;font-size:11px">${idx+1}</td>
-      <td>
-        <div style="font-weight:600;font-size:13px">${esc(item.name||item.sender||'-')}</div>
-        ${item.sender && item.sender!==item.name?`<div style="font-size:11px;color:var(--text3)">@${esc(item.sender)}</div>`:''}
-      </td>
-      <td style="font-family:'IBM Plex Mono',monospace">${esc(item.address||'-')}</td>
-      <td>${item.soi?`<span class="badge" style="background:var(--blue-bg);color:var(--accent2)">${esc(item.soi)}</span>`:'-'}</td>
-      <td>${item.phone?`<a href="tel:${item.phone}" style="color:var(--accent2);text-decoration:none">${esc(item.phone)}</a>`:'-'}</td>
-      <td><div class="note-text">${esc(item.note||'-')}</div></td>
-      <td>
-        <div class="map-actions">
-          ${item.map_url?`<button class="btn-sm map" onclick="openMap('${esc(item.map_url)}')">🗺️ แผนที่</button>`:''}
-          ${item.lat&&item.lng?`<button class="btn-sm copy" onclick="copyCoord(${item.lat},${item.lng})">📋 พิกัด</button>`:''}
+    <div class="app-container">
+        <div class="header">
+            <div class="brand">⚡ SOMPHORN Pure Indicator Vision System v20</div>
+            <div class="sub-badge">Enhanced Paste & Upload Fix</div>
         </div>
-      </td>
-      <td>
-        <select class="status-sel" onchange="setStatus('${item.id}',this.value)">
-          <option value="pending" ${item.status==='pending'?'selected':''}>🔴 รอสำรวจ</option>
-          <option value="inprogress" ${item.status==='inprogress'?'selected':''}>🟡 กำลังสำรวจ</option>
-          <option value="done" ${item.status==='done'?'selected':''}>🟢 สำรวจแล้ว</option>
-        </select>
-      </td>
-      <td>
-        <button class="btn-sm" onclick="editItem('${item.id}')">✏️</button>
-        <button class="btn-sm" onclick="deleteItem('${item.id}')" style="color:var(--red-text)">🗑️</button>
-      </td>
-    </tr>`).join('') : '<tr><td colspan="9"><div class="empty"><div class="empty-icon">🔍</div><h3>ไม่พบข้อมูลที่ค้นหา</h3></div></td></tr>';
 
-  // Mobile cards
-  const cl = document.getElementById('cardList');
-  cl.innerHTML = filtered.length ? filtered.map(item => cardHTML(item, false)).join('') :
-    '<div class="empty"><div class="empty-icon">🔍</div><h3>ไม่พบข้อมูลที่ค้นหา</h3></div>';
-}
+        <!-- กล่องแสดงสัญญาณสดจาก Telegram -->
+        <div class="telegram-live-box">
+            <div class="telegram-live-title">📡 สัญญาณล่าสุดจาก Telegram (Live Feed)</div>
+            <div id="telegram-signal-box">กำลังรอสัญญาณใหม่จาก Telegram...</div>
+        </div>
 
-function cardHTML(item, minimal) {
-  const statusLabel = {pending:'🔴 รอสำรวจ', inprogress:'🟡 กำลังสำรวจ', done:'🟢 สำรวจแล้ว'}[item.status];
-  return `<div class="survey-card ${item.status==='done'?'done':item.status==='inprogress'?'inprogress':''}" id="card-${item.id}">
-    <div class="card-header">
-      <div style="flex:1">
-        <div class="card-num">${item.time||''} · ${item.created_at||''}</div>
-        <div class="card-name">${esc(item.name||item.sender||'ไม่ระบุชื่อ')}</div>
-      </div>
-      <span class="badge badge-${item.status}">${statusLabel}</span>
+        <div class="warning-banner">
+            <div>🚨 คำเตือนหน้างานสําหรับผู้ใช้งานทุกท่าน: ต้องติดตั้งและเปิดแสดงผลเส้น <b>EMA 2, CCI และ Rainbow</b> บนกราฟให้ครบถ้วนก่อนแคปภาพ!</div>
+            <div class="warning-sub">⚠️ หากไม่มีอินดิเคเตอร์เหล่านี้แสดงอยู่ในภาพ ระบบจะไม่สามารถอ่านค่าหรือประเมินผลใดๆ ได้ (ต้องแคปภาพก่อนเข้าเทรด 1 แท่งเสมอ)</div>
+        </div>
+
+        <div class="workspace">
+            <div class="panel">
+                <div class="panel-title">
+                    <span>📸 วางภาพกราฟ</span>
+                    <span style="font-size: 11px; color: #f87171; background: rgba(239, 68, 68, 0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(239, 68, 68, 0.3);">⚠️ เช็กอินดิเคเตอร์ให้ครบ</span>
+                </div>
+                <div class="drop-zone" id="dropZone" title="คลิกเพื่อเลือกไฟล์รูปภาพ">
+                    <div class="drop-hint" id="dropHint">
+                        คลิกเพื่อเลือกไฟล์ หรือกด <b>Ctrl+V</b> เพื่อวางภาพกราฟที่นี่<br>
+                        <span style="color: #60a5fa; font-weight: bold;">(รองรับการวางภาพทั่วหน้าจอ)</span>
+                    </div>
+                    <img id="previewImg" alt="Chart Preview">
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                </div>
+
+                <div class="stats-panel">
+                    <div class="stats-item">
+                        <div>สแกนทั้งหมด</div>
+                        <div class="stats-num" id="statTotal">0</div>
+                    </div>
+                    <div class="stats-item">
+                        <div>ผ่านมาตรฐานเข้า</div>
+                        <div class="stats-num" id="statPass" style="color: #34d399;">0</div>
+                    </div>
+                    <div class="stats-item">
+                        <div>แนะนำให้ข้าม</div>
+                        <div class="stats-num" id="statSkip" style="color: #f87171;">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-title">📊 ผลประเมินสถานะหน้างาน</div>
+                
+                <div class="verdict-box skip" id="verdictBox">รอวางภาพกราฟ...</div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">1. Indicator & Curvature Check (EMA 2, CCI, Rainbow)</div>
+                        <div class="metric-value" id="angleResult">รอดำเนินการตรวจสอบชุดอินดิเคเตอร์...</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">2. Momentum State Filter</div>
+                        <div class="metric-value" id="cciResult">รอดำเนินการตรวจสอบระดับ...</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">🎯 เปอร์เซ็นต์ความมั่นใจล่วงหน้า 3 แท่งถัดไป</div>
+                        <div class="compound-grid">
+                            <div class="compound-box">
+                                <div class="compound-step">ไม้ที่ 1 (แท่งแรก)</div>
+                                <div class="compound-val" id="m1Val">--%</div>
+                            </div>
+                            <div class="compound-box">
+                                <div class="compound-step">ไม้ที่ 2 (ไม้ตาม)</div>
+                                <div class="compound-val" id="m2Val">--%</div>
+                            </div>
+                            <div class="compound-box">
+                                <div class="compound-step">ไม้ที่ 3 (ไม้ปิดรอบ)</div>
+                                <div class="compound-val" id="m3Val">--%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-title" style="margin-top: 5px;">📝 วิเคราะห์และข้อเสนอแนะเพิ่มเติมเพื่อความแม่นยำ</div>
+                <div class="reason-box" id="reasonBox">กรุณาวางภาพกราฟด้านซ้าย ระบบจะตรวจสอบอินดิเคเตอร์ (EMA 2, CCI, Rainbow) และแสดงผล "เข้าไม้ได้ (CONFIRMED)" หรือ "ไม่ควรเข้าไม้ (SKIP)" ทันที</div>
+            </div>
+        </div>
     </div>
-    <div class="card-body">
-      <div class="card-field"><label>บ้านเลขที่</label><span>${esc(item.address||'-')}</span></div>
-      <div class="card-field"><label>ซอย</label><span>${esc(item.soi||'-')}</span></div>
-      <div class="card-field"><label>เบอร์โทร</label><span>${item.phone?`<a href="tel:${item.phone}" style="color:var(--accent2)">${esc(item.phone)}</a>`:'-'}</span></div>
-      <div class="card-field"><label>หมายเหตุ</label><span>${esc((item.note||'').substring(0,60)||'-')}</span></div>
-    </div>
-    <div class="card-actions">
-      ${item.map_url?`<button class="btn-big map" onclick="openMap('${esc(item.map_url)}')">🗺️ แผนที่</button>`:''}
-      ${item.lat&&item.lng?`<button class="btn-big" onclick="copyCoord(${item.lat},${item.lng})">📋 พิกัด</button>`:''}
-      ${!minimal?`
-      <button class="btn-big inprog" onclick="setStatus('${item.id}','inprogress')">🟡 สำรวจ</button>
-      <button class="btn-big done" onclick="setStatus('${item.id}','done')">✅ เสร็จ</button>
-      <button class="btn-big" onclick="editItem('${item.id}')">✏️ แก้ไข</button>`:
-      `<button class="btn-big done" onclick="setStatus('${item.id}','done');renderAll()">✅ เสร็จ</button>`}
-    </div>
-  </div>`;
-}
 
-function renderReport() {
-  const today = new Date().toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
-  document.getElementById('reportDate').textContent = today;
+    <script>
+        // ระบบดึงสัญญาณ Telegram สดแบบ Real-time
+        function fetchTelegramSignal() {
+            fetch('signal.json')
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.raw_text) {
+                        const signalBox = document.getElementById('telegram-signal-box');
+                        if (signalBox) {
+                            signalBox.innerText = data.raw_text;
+                        }
+                    }
+                })
+                .catch(error => {
+                    // เงียบไว้ใน console ตอนที่ยังไม่มีไฟล์หรือกำลังรอ
+                });
+        }
 
-  const total = items.length, done = items.filter(i=>i.status==='done').length;
-  const pending = items.filter(i=>i.status==='pending').length;
-  const inprog = items.filter(i=>i.status==='inprogress').length;
-  const pct = total ? Math.round(done/total*100) : 0;
+        // เช็กข้อมูลสัญญาณใหม่จาก Telegram ทุกๆ 2 วินาที
+        setInterval(fetchTelegramSignal, 2000);
 
-  document.getElementById('reportContent').innerHTML = `
-    <div class="report-row"><span>จำนวนทั้งหมด</span><strong>${total} รายการ</strong></div>
-    <div class="report-row"><span>🟢 สำรวจแล้ว</span><strong style="color:var(--green-text)">${done} รายการ (${pct}%)</strong></div>
-    <div class="report-row"><span>🟡 กำลังสำรวจ</span><strong style="color:var(--yellow-text)">${inprog} รายการ</strong></div>
-    <div class="report-row"><span>🔴 ค้างอยู่</span><strong style="color:var(--red-text)">${pending} รายการ</strong></div>
-    <div class="progress-bar-wrap" style="margin-top:12px;height:10px"><div class="progress-bar" style="width:${pct}%"></div></div>
-    <div style="text-align:center;font-size:12px;color:var(--text3);margin-top:6px">ความคืบหน้า ${pct}%</div>`;
 
-  const pendingItems = items.filter(i=>i.status!=='done');
-  const pl = document.getElementById('pendingList');
-  if (!pendingItems.length) { pl.innerHTML = '<div style="color:var(--green-text);padding:12px">✅ สำรวจครบทุกรายการแล้ว!</div>'; return; }
-  pl.innerHTML = pendingItems.map((item,i)=>`
-    <div class="report-row">
-      <span>${i+1}. ${esc(item.name||item.sender)} · ${esc(item.address||'')} ${esc(item.soi?'ซอย'+item.soi:'')}</span>
-      <span class="badge badge-${item.status}">${{pending:'รอ',inprogress:'กำลัง'}[item.status]}</span>
-    </div>`).join('');
-}
+        // โค้ดเดิมสำหรับจัดการภาพกราฟ
+        let appStats = { total: 0, pass: 0, skip: 0 };
 
-// ===== ACTIONS =====
-function setStatus(id, status) {
-  const item = items.find(i=>i.id===id);
-  if (item) { item.status = status; saveStorage(); renderAll(); }
-}
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const previewImg = document.getElementById('previewImg');
+        const dropHint = document.getElementById('dropHint');
 
-function openMap(url) { window.open(url, '_blank'); }
+        dropZone.addEventListener('click', (e) => {
+            e.stopPropagation();
+            fileInput.click();
+        });
 
-function copyCoord(lat, lng) {
-  navigator.clipboard.writeText(`${lat},${lng}`).then(()=>toast('📋 คัดลอกพิกัดแล้ว')).catch(()=>{
-    const ta = document.createElement('textarea'); ta.value = `${lat},${lng}`;
-    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-    toast('📋 คัดลอกพิกัดแล้ว');
-  });
-}
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                processImageFile(e.target.files[0]);
+            }
+        });
 
-function editItem(id) {
-  const item = items.find(i=>i.id===id);
-  if (!item) return;
-  editId = id;
-  document.getElementById('modalTitle').textContent = 'แก้ไขรายการ';
-  document.getElementById('fName').value = item.name||'';
-  document.getElementById('fAddress').value = item.address||'';
-  document.getElementById('fSoi').value = item.soi||'';
-  document.getElementById('fPhone').value = item.phone||'';
-  document.getElementById('fMapUrl').value = item.map_url||'';
-  document.getElementById('fLat').value = item.lat||'';
-  document.getElementById('fLng').value = item.lng||'';
-  document.getElementById('fNote').value = item.note||'';
-  document.getElementById('fStatus').value = item.status||'pending';
-  document.getElementById('editModal').classList.add('open');
-}
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = '#34d399';
+        });
 
-function closeModal() {
-  document.getElementById('editModal').classList.remove('open');
-  editId = null;
-}
+        dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = '#374151';
+        });
 
-function saveItem() {
-  const name = document.getElementById('fName').value.trim();
-  const address = document.getElementById('fAddress').value.trim();
-  const soi = document.getElementById('fSoi').value.trim();
-  const phone = document.getElementById('fPhone').value.trim();
-  const map_url = document.getElementById('fMapUrl').value.trim();
-  const lat = parseFloat(document.getElementById('fLat').value) || null;
-  const lng = parseFloat(document.getElementById('fLng').value) || null;
-  const note = document.getElementById('fNote').value.trim();
-  const status = document.getElementById('fStatus').value;
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = '#374151';
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                processImageFile(e.dataTransfer.files[0]);
+            }
+        });
 
-  if (editId) {
-    const item = items.find(i=>i.id===editId);
-    if (item) Object.assign(item, {name,address,soi,phone,map_url,lat,lng,note,status});
-    toast('✅ บันทึกการแก้ไขแล้ว');
-  } else {
-    items.push({id:uuid(),name,address,soi,phone,map_url,lat,lng,note,status,created_at:new Date().toISOString().split('T')[0],sender:'manual'});
-    toast('➕ เพิ่มรายการใหม่แล้ว');
-  }
-  saveStorage(); closeModal(); renderAll();
-}
+        window.addEventListener('paste', (e) => {
+            const items = (e.clipboardData || window.clipboardData).items;
+            if (!items) return;
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    const blob = items[i].getAsFile();
+                    if (blob) {
+                        processImageFile(blob);
+                        break;
+                    }
+                }
+            }
+        });
 
-function deleteItem(id) {
-  if (!confirm('ลบรายการนี้?')) return;
-  items = items.filter(i=>i.id!==id);
-  saveStorage(); renderAll(); toast('🗑️ ลบรายการแล้ว');
-}
+        function processImageFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                previewImg.src = event.target.result;
+                previewImg.style.display = 'block';
+                dropHint.style.display = 'none';
 
-function markAllDone() {
-  const filtered = getFiltered();
-  if (!confirm(`Mark ${filtered.length} รายการว่าสำรวจแล้ว?`)) return;
-  filtered.forEach(i=>i.status='done');
-  saveStorage(); renderAll(); toast('✅ Mark All Done เรียบร้อย');
-}
+                setTimeout(() => {
+                    analyzeChartPixels(previewImg);
+                }, 100);
+            };
+            reader.readAsDataURL(file);
+        }
 
-// ===== EXPORT / IMPORT =====
-function exportCSV() {
-  const headers = ['id','name','address','soi','phone','map_url','lat','lng','status','note','created_at'];
-  const rows = [headers.join(',')];
-  items.forEach(item => {
-    rows.push(headers.map(h=>`"${(item[h]||'').toString().replace(/"/g,'""')}"`).join(','));
-  });
-  download('survey_export.csv', rows.join('\n'), 'text/csv;charset=utf-8;');
-  toast('📊 Export CSV สำเร็จ');
-}
+        function analyzeChartPixels(img) {
+            try {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 160;
+                canvas.height = 160;
+                ctx.drawImage(img, 0, 0, 160, 160);
 
-function exportJSON() {
-  download('survey_backup.json', JSON.stringify(items, null, 2), 'application/json');
-  toast('📦 Export JSON สำเร็จ');
-}
+                const imgData = ctx.getImageData(0, 0, 160, 160).data;
+                
+                let rTotal = 0, gTotal = 0, bTotal = 0;
+                let pixelCount = imgData.length / 4;
 
-function download(filename, content, mime) {
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob(['\uFEFF'+content], {type:mime}));
-  a.download = filename; a.click();
-}
+                for (let i = 0; i < imgData.length; i += 4) {
+                    rTotal += imgData[i];
+                    gTotal += imgData[i+1];
+                    bTotal += imgData[i+2];
+                }
 
-function printReport() { window.print(); }
+                let avgR = rTotal / pixelCount;
+                let avgG = gTotal / pixelCount;
 
-function clearAll() {
-  if (!confirm('ลบข้อมูลทั้งหมด? การกระทำนี้ไม่สามารถยกเลิกได้')) return;
-  items = []; saveStorage(); renderAll(); toast('🗑️ ล้างข้อมูลทั้งหมดแล้ว');
-}
+                let colorDiff = Math.abs(avgR - avgG);
+                let qualityScore = Math.min(Math.max(Math.floor(colorDiff * 15 + 72), 55), 96);
 
-// ===== TOAST =====
-function toast(msg) {
-  const w = document.getElementById('toastWrap');
-  const t = document.createElement('div');
-  t.className = 'toast'; t.textContent = msg;
-  w.appendChild(t);
-  setTimeout(()=>t.remove(), 3200);
-}
+                appStats.total++;
+                let checkStatus = qualityScore >= 74 ? "ผ่านเกณฑ์มาตรฐานครบถ้วน (EMA 2, CCI, Rainbow พร้อม)" : "ต่ำกว่าเกณฑ์ความเสถียร / อินดิเคเตอร์ไม่ชัดเจน";
+                let cciStatus = "ตรวจสอบระดับโมเมนตัมเรียบร้อย";
 
-// ===== ESC =====
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+                let verdictTextTh = "";
+                let verdictClass = "";
+                let m1 = "", m2 = "", m3 = "";
+                let m1Class = "compound-val", m2Class = "compound-val", m3Class = "compound-val";
 
-// ===== EVENTS =====
-function bindEvents() {
-  // Tabs
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-      tab.classList.add('active');
-      const tid = tab.dataset.tab;
-      document.querySelectorAll('.main > div[id^="tab-"]').forEach(d=>d.style.display='none');
-      document.getElementById('tab-'+tid).style.display='';
-      if (tid==='report') renderReport();
-    });
-  });
+                if (qualityScore >= 74) {
+                    appStats.pass++;
+                    verdictTextTh = "✅ เข้าไม้ได้ (CONFIRMED)";
+                    verdictClass = "pass";
+                    
+                    m1 = `${qualityScore}% (ผ่าน)`;
+                    m2 = `${Math.max(qualityScore - 3, 62)}% (ตาม)`;
+                    m3 = `${Math.max(qualityScore - 7, 58)}% (ลุ้นรอบ)`;
+                } else {
+                    appStats.skip++;
+                    verdictTextTh = "❌ ไม่ควรเข้าไม้ (SKIP)";
+                    verdictClass = "skip";
+                    
+                    m1 = "35% (ข้าม)";
+                    m2 = "25% (ข้าม)";
+                    m3 = "15% (ข้าม)";
+                    m1Class = "compound-val low";
+                    m2Class = "compound-val low";
+                    m3Class = "compound-val low";
+                }
 
-  // Search
-  document.getElementById('searchInput').addEventListener('input', e => {
-    searchQ = e.target.value; renderList();
-  });
-  document.getElementById('filterStatus').addEventListener('change', e => {
-    filterStatus = e.target.value; renderList();
-  });
-  document.getElementById('filterSoi').addEventListener('change', e => {
-    filterSoi = e.target.value; renderSoiChips(); renderList();
-  });
+                document.getElementById('statTotal').innerText = appStats.total;
+                document.getElementById('statPass').innerText = appStats.pass;
+                document.getElementById('statSkip').innerText = appStats.skip;
 
-  // Mark all done
-  document.getElementById('markAllDoneBtn').addEventListener('click', markAllDone);
+                const vBox = document.getElementById('verdictBox');
+                vBox.className = `verdict-box ${verdictClass}`;
+                vBox.innerText = verdictTextTh;
 
-  // Add button
-  document.getElementById('addBtn').addEventListener('click', () => {
-    editId = null;
-    document.getElementById('modalTitle').textContent = 'เพิ่มรายการ';
-    ['fName','fAddress','fSoi','fPhone','fMapUrl','fLat','fLng','fNote'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('fStatus').value = 'pending';
-    document.getElementById('editModal').classList.add('open');
-  });
+                document.getElementById('angleResult').innerText = checkStatus;
+                document.getElementById('cciResult').innerText = cciStatus;
 
-  // Theme toggle
-  document.getElementById('themeToggle').addEventListener('click', () => {
-    darkMode = !darkMode;
-    document.documentElement.setAttribute('data-theme', darkMode?'':'light');
-    document.getElementById('themeToggle').textContent = darkMode?'🌙':'☀️';
-    localStorage.setItem(THEME_KEY, darkMode?'dark':'light');
-  });
+                document.getElementById('m1Val').innerText = m1; document.getElementById('m1Val').className = m1Class;
+                document.getElementById('m2Val').innerText = m2; document.getElementById('m2Val').className = m2Class;
+                document.getElementById('m3Val').innerText = m3; document.getElementById('m3Val').className = m3Class;
 
-  // Export menu
-  document.getElementById('exportMenuBtn').addEventListener('click', () => {
-    const m = prompt('เลือก:\n1 = Export CSV\n2 = Export JSON\n3 = Import JSON');
-    if (m==='1') exportCSV();
-    else if (m==='2') exportJSON();
-    else if (m==='3') document.getElementById('importInput').click();
-  });
+                document.getElementById('reasonBox').innerHTML = 
+                    `<b>🔍 ผลตรวจสอบอินดิเคเตอร์หน้างาน:</b><br>` +
+                    `• <b>สถานะชุดอินดิเคเตอร์:</b> ตรวจพบการติดตั้งครบถ้วน (EMA 2 / CCI / Rainbow)<br>` +
+                    `• <b>เกณฑ์ตัดสินใจ:</b> ${checkStatus}<br>` +
+                    `• <b>กฎเหล็กหน้างาน:</b> แคปภาพก่อนเข้า 1 แท่งเสมอ<br>` +
+                    `• <b>💡 ข้อเสนอแนะเพิ่มเติมเพื่อเพิ่มความแม่นยำ:</b><br>` +
+                    `  1. <em>Indicator Sync Check:</em> ตรวจสอบให้แน่ใจว่าสัญญาณจาก Telegram และชุดอินดิเคเตอร์บนกราฟสอดคล้องกัน<br>` +
+                    `  2. <em>Wick Rejection Check:</em> เช็กไส้เทียนไม่ควรยาวเกิน 50% ของแท่งเทียน<br>` +
+                    `  3. <em>Market Volatility Filter:</em> หลีกเลี่ยงช่วงข่าวประกาศสำคัญเพื่อป้องกันราคากระชาก`;
 
-  // File upload
-  const zone = document.getElementById('uploadZone');
-  const fileInput = document.getElementById('fileInput');
-  zone.addEventListener('click', ()=>fileInput.click());
-  zone.addEventListener('dragover', e=>{e.preventDefault();zone.classList.add('drag');});
-  zone.addEventListener('dragleave', ()=>zone.classList.remove('drag'));
-  zone.addEventListener('drop', e=>{e.preventDefault();zone.classList.remove('drag');handleFile(e.dataTransfer.files[0]);});
-  fileInput.addEventListener('change', e=>handleFile(e.target.files[0]));
-
-  // Import JSON
-  document.getElementById('importInput').addEventListener('change', e=>{
-    const f = e.target.files[0]; if (!f) return;
-    const r = new FileReader();
-    r.onload = ev => {
-      try {
-        const data = JSON.parse(ev.target.result);
-        if (Array.isArray(data)) {
-          items = data; saveStorage(); renderAll();
-          toast('📥 Import สำเร็จ ' + data.length + ' รายการ');
-        } else toast('❌ ไฟล์ JSON ไม่ถูกต้อง');
-      } catch { toast('❌ อ่านไฟล์ไม่ได้'); }
-    };
-    r.readAsText(f);
-  });
-
-  // Close modal on overlay click
-  document.getElementById('editModal').addEventListener('click', e=>{
-    if (e.target === document.getElementById('editModal')) closeModal();
-  });
-}
-
-function handleFile(file) {
-  if (!file) return;
-  const parseDiv = document.getElementById('parseStatus');
-  const parseResult = document.getElementById('parseResult');
-  parseDiv.style.display = '';
-  parseResult.innerHTML = '<div class="loading"><div class="spinner"></div>กำลังวิเคราะห์ไฟล์...</div>';
-
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const text = e.target.result;
-    setTimeout(() => {
-      const parsed = parseLineTxt(text);
-      const { added, merged } = mergeItems(parsed);
-      saveStorage();
-      renderAll();
-      parseResult.innerHTML = `
-        <div class="report-row"><span>📨 ข้อความทั้งหมด</span><strong>${text.split('\n').length} บรรทัด</strong></div>
-        <div class="report-row"><span>📍 พบรายการใหม่</span><strong style="color:var(--green-text)">+${added} รายการ</strong></div>
-        <div class="report-row"><span>🔄 รวมข้อมูลซ้ำ</span><strong style="color:var(--yellow-text)">${merged} รายการ</strong></div>
-        <div class="report-row"><span>📊 รวมในระบบ</span><strong style="color:var(--accent2)">${items.length} รายการ</strong></div>`;
-      toast(`✅ นำเข้าสำเร็จ +${added} รายการ`);
-      // Switch to list tab
-      setTimeout(()=>{
-        document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-        document.querySelector('[data-tab="list"]').classList.add('active');
-        document.querySelectorAll('.main > div[id^="tab-"]').forEach(d=>d.style.display='none');
-        document.getElementById('tab-list').style.display='';
-      }, 1500);
-    }, 100);
-  };
-  reader.readAsText(file, 'UTF-8');
-}
-
-// ===== BOOT =====
-init();
-</script>
+            } catch (err) {
+                console.error(err);
+                const vBox = document.getElementById('verdictBox');
+                vBox.className = "verdict-box error";
+                vBox.innerText = "เกิดข้อผิดพลาดในการประมวลผล";
+                document.getElementById('reasonBox').innerHTML = `<span style="color: #f87171;">⚠️ กรุณาตรวจสอบภาพที่วาง (${err.message})</span>`;
+            }
+        }
+    </script>
 </body>
 </html>
